@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,6 +67,15 @@ class BeerControllerTest {
         mockMvc.perform(put("/api/v1/beer/" + UUID.randomUUID().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(beerDtoJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getBeerByUpc() throws Exception {
+
+        when(beerService.getByUpc(anyString(), anyBoolean())).thenReturn(getValidBeerDto());
+
+        mockMvc.perform(get("/api/v1/beerUpc/" + getValidBeerDto().getUpc()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 

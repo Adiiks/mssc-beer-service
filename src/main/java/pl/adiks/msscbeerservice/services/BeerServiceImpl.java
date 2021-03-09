@@ -100,4 +100,16 @@ public class BeerServiceImpl implements BeerService {
 
         return beerPagedList;
     }
+
+    @Cacheable(cacheNames = "beerUpcCache", key = "#upc", condition = "#showInventoryOnHand == false ")
+    @Override
+    public BeerDTO getByUpc(String upc, Boolean showInventoryOnHand) throws NotFoundException {
+
+        if (showInventoryOnHand)
+            return beerMapper.beerToBeerDtoWithInventory(
+                    beerRepository.findByUpc(upc).orElseThrow(() -> new NotFoundException("Beer not found. Wrong upc")));
+
+        return beerMapper.beerToBeerDto(
+                beerRepository.findByUpc(upc).orElseThrow(() -> new NotFoundException("Beer not found. Wrong upc")));
+    }
 }

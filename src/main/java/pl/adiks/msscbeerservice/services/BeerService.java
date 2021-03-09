@@ -17,4 +17,6 @@ public interface BeerService {
     BeerDTO updateBeerById(UUID beerId, BeerDTO beerDTO) throws NotFoundException;
 
     BeerPagedList listBeers(String beerName, BeerStyleEnum beerStyle, PageRequest pageRequest, boolean showInventoryOnHand);
+
+    BeerDTO getByUpc(String upc, Boolean showInventoryOnHand) throws NotFoundException;
 }

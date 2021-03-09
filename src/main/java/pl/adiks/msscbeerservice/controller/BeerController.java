@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/beer")
+@RequestMapping("/api/v1")
 public class BeerController {
 
     private static final Integer DEFAULT_PAGE_NUMBER = 0;
@@ -47,7 +47,7 @@ public class BeerController {
         return new ResponseEntity<>(beerList, HttpStatus.OK);
     }
 
-    @GetMapping("/{beerId}")
+    @GetMapping("/beer/{beerId}")
     public ResponseEntity<BeerDTO> getBeerById(@PathVariable UUID beerId, @RequestParam(required = false) Boolean showInventoryOnHand) throws NotFoundException {
 
         if (showInventoryOnHand == null)
@@ -56,13 +56,24 @@ public class BeerController {
         return new ResponseEntity<>(beerService.getById(beerId, showInventoryOnHand), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/beer")
     public ResponseEntity<BeerDTO> saveNewBeer(@Valid @RequestBody BeerDTO beerDTO) {
         return new ResponseEntity<>(beerService.saveNewBeer(beerDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{beerId}")
+    @PutMapping("/beer/{beerId}")
     public ResponseEntity<BeerDTO> updateBeerById(@PathVariable UUID beerId, @Valid @RequestBody BeerDTO beerDTO) throws NotFoundException {
             return new ResponseEntity<>(beerService.updateBeerById(beerId, beerDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/beerUpc/{upc}")
+    public ResponseEntity<BeerDTO> getBeerByUpc(@PathVariable String upc,
+                                                @RequestParam(required = false) Boolean showInventoryOnHand)
+            throws NotFoundException {
+
+        if (showInventoryOnHand == null)
+            showInventoryOnHand = false;
+
+        return new ResponseEntity<>(beerService.getByUpc(upc, showInventoryOnHand), HttpStatus.OK);
     }
 }
